@@ -18,14 +18,13 @@ while True:
         break
     
     frame = cv2.resize(frame, config.INPUT_SIZE)
+
     if writer is None:
         fourcc = cv2.VideoWriter_fourcc(*"MJPG")
         writer = cv2.VideoWriter('output.avi', fourcc, 30, (frame.shape[1], frame.shape[0]), True)
     
     net.detect(frame)
     writer.write(frame)
-# for i in os.listdir(config.PATH.IMAGES):
-#     net.detect(f'{config.PATH.IMAGES}/{i}', True)
 
 writer.release()
 cam.release()
