@@ -1,3 +1,2 @@
-unused
-object_detection/yolo
+common/cv/object_detection/yolo
 .vscode
