@@ -23,7 +23,7 @@
         else:
             ignore
 
-2. Restart automatically if server is down and save error to log file
+2. Restart automatically if server is down and save error to log file -- solved with sentry
 
 3. Api to return the log information
 
@@ -39,9 +39,9 @@
 
 -- TODO --
 [x] - auto restart
-[] - auto log
-[] - api to display log
-[] - scheulder process
+[x] - auto log -- solved with sentry
+[x] - api to display log -- solved with sentry
+[] - scheulder process 
 [] - api to fetch video
 [] - process checking
 [] - video slicing
