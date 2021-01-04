@@ -3,28 +3,32 @@ import imutils
 import numpy as np
 from common.shared import config
 
+detector = cv2.ORB_create(config.ORB_NUM)
+matcher = cv2.FlannBasedMatcher(config.INDEX_PARAMS, config.SEARCH_PARAMS)
 
-def get_white_image(shape=config.FX_IMAGE_SIZE):
-    return np.full(shape, config.WHITE, np.uint8)
+
+def compute_features(img):
+    img = resize_white(img)
+    kp, desc = detector.detectAndCompute(img, None)
+    return kp, desc
 
 
-def resize_white(img):
-    h, w, _ = img.shape
-    resized_img = None
+def compute_distance():
+    pass
 
-    if w > h:
-        resized_img = imutils.resize(img, width=config.FX_IMAGE_SIZE[0])
-    else:
-        resized_img = imutils.resize(img, height=config.FX_IMAGE_SIZE[0])
 
-    new_img = get_white_image()
-    
-    org_h, org_w, _ = resized_img.shape
-    new_h, new_w, _ = new_img.shape
+def search_product(target, database):
+    # TODO create instance base
+    # kp1, desc2 = compute_features(target)
 
-    y_off = round((new_h-org_h) / 2)
-    x_off = round((new_w-org_w) / 2)
+    # for db in database:
+    #     matches = matcher.knnMatch(desc1, desc2, 2)
+    #     good_matches = [m[0] for m in matches if len(m) == 2 and m[0].distance < m[1].distance * ratio]
 
-    new_img[y_off:y_off+org_h, x_off:x_off+org_w] = resized_img
+    #     if len(good_matches) > config.MIN_MATCH:
+    #         src_pts = np.float32([kp1[m.queryIdx].pt for m in good_matches])
+    #         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good_matches])
+    #         mtrx, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.)
+    #         accuracy = float(mask.sum()) / mask.size
 
-    return new_img
+    #         if mask.sum() > config.MIN_MATCH:

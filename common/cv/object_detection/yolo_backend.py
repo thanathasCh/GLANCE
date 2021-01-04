@@ -2,6 +2,7 @@ import numpy as np
 import cv2 
 from common.shared import config
 
+
 class YOLOv4():
     def __init__(self):
         self.net = cv2.dnn.readNetFromDarknet(config.CONFIG_FILE, config.WEIGHTS_FILE)
@@ -11,18 +12,10 @@ class YOLOv4():
         self.ln = [self.layerNames[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
     def getBlob(self, image):
-        if type(image) is str:
-            image = cv2.imread(image)
-        
-        blob = cv2.dnn.blobFromImage(image, 1/255., config.INPUT_SIZE, swapRB=True, crop=False)
-        
-        return blob
+        return cv2.dnn.blobFromImage(image, 1/255., config.INPUT_SIZE, swapRB=True, crop=False)
 
 
     def getLayerOutputs(self, image):
-        if type(image) is str:
-            image = cv2.imread(image)
-
         blob = self.getBlob(image)
         self.net.setInput(blob)
         layerOutputs = self.net.forward(self.ln)
@@ -31,9 +24,6 @@ class YOLOv4():
 
 
     def getCoordinates(self, image):
-        if type(image) is str:
-            image = cv2.imread(image)
-
         boxes = []
         confidence = []
         W, H, _ = image.shape
@@ -67,10 +57,7 @@ class YOLOv4():
         return coords
 
     
-    def detect(self, image, isShow=False):
-        if type(image) is str:
-            image = cv2.imread(image)
-
+    def detect(self, image, isShow=False):        
         coords = self.getCoordinates(image)
         
         for x1, y1, x2, y2 in coords:
@@ -80,7 +67,12 @@ class YOLOv4():
             cv2.imshow('Detected Image', image)
             cv2.waitKey()
 
+    
+    def detectImg(self, image):
+        coords = self.getCoordinates(images)
+        products = []
 
-def product_detection(images):
-    # TODO implement product detection on images.
-    pass
+        for x1, y1, x2, y2 in coords:
+            products.append(image[x1:x2, y1:y2])
+
+        return products

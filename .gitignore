@@ -1,2 +1,3 @@
 common/cv/object_detection/yolo
+common/shared/secret.secure
 .vscode

@@ -25,3 +25,15 @@ BLUE = (255, 0, 0)
 GREEN = (0, 255, 0)
 RED = (0, 0, 255)
 WHITE = (255, 255, 255)
+
+# Feature matching
+MIN_MATCH = 10
+RATIO = .8
+ORB_NUM = 1000
+INDEX_PARAMS = dict(
+    algorithm=6,
+    table_number=6,
+    key_size=12,
+    multi_probe_level=1
+)
+SEARCH_PARAMS = dict(checks=64)
