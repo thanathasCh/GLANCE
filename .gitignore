@@ -1,3 +1,3 @@
-common/cv/object_detection/yolo
-common/shared/secret.secure
+cv/object_detection/yolo
+common/secure.py
 .vscode

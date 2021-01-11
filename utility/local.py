@@ -1,9 +1,10 @@
 import sqlite3
-from  common.cv.preprocess import img_to_bytes
+from common import config
+from  cv.preprocess import img_to_bytes
 
 class LocalStorage:
     def __init__(self):
-        self.connection = sqlite3.connect('local.db')
+        self.connection = sqlite3.connect(config.LOCAL_DB)
         self.cursor = self.connection.cursor()
 
         if not self.checkTableExist():
@@ -16,6 +17,7 @@ class LocalStorage:
             CREATE TABLE Images
             (
                 id INTEGER,
+                location_id INTEGER,
                 body BLOB
             )
             ''')
@@ -50,7 +52,7 @@ class LocalStorage:
         return self.cursor.fetchall()
 
 
-    def get_feature(self, index):
+    def get_feature_by_id(self, index):
         self.cursor.execute(
             '''
             SELECT *
@@ -59,6 +61,17 @@ class LocalStorage:
             ''', [index])
 
         return self.cursor.fetchone()
+
+
+    def get_feature_by_location_id(self, location_id):
+        self.cursor.execute(
+            '''
+            SELECT *
+            FROM Images
+            WHERE location_id = ?
+            ''', [Location_id])
+
+        return self.cursor.fetchall()
 
 
     def add_feature(self, index, image):
@@ -82,11 +95,25 @@ class LocalStorage:
             '''
             UPDATE Images
             SET body = ?
-            WHERE index = ?
+            WHERE id = ?
             ''', [image, index])
+
+        self.connection.commit()
+
+
+    def delete_features(self, ids):
+        idsQuery = tuple(ids)
+        self.cursor.execute(
+            '''
+            DELETE FROM Images
+            WHERE id in ?
+            ''', [idsQuery])
 
         self.connection.commit()
 
 
     def __del__(self):
         self.connection.close()
+
+
+storage = LocalStorage()

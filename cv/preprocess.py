@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-from common.shared import config
-from common.cv.object_detection.yolo_backend import YOLOv4
+from common import config
+from cv.object_detection.yolo_backend import YOLOv4 # TODO remove to backend
 
 model = YOLOv4()
 
@@ -14,8 +14,8 @@ def img_to_bytes(img):
 
 
 def slice_video(video, distance=2):
-    fps = video.get(cv2.CAP_PROP_FPS)
     # TODO slide video into images
+    pass
 
 
 def detect_products(img):

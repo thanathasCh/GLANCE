@@ -1,7 +1,7 @@
 import cv2
 import imutils
 import numpy as np
-from common.shared import config
+from common import config
 
 detector = cv2.ORB_create(config.ORB_NUM)
 matcher = cv2.FlannBasedMatcher(config.INDEX_PARAMS, config.SEARCH_PARAMS)
@@ -32,3 +32,4 @@ def search_product(target, database):
     #         accuracy = float(mask.sum()) / mask.size
 
     #         if mask.sum() > config.MIN_MATCH:
+    return -1

@@ -1,13 +1,18 @@
+# Status
+IS_PROCESS_RUNNING = False
+
 # String
 WEB_NAME = 'Glance'
 
 # Base Directory
-OBJECT_DETECTION = 'common/cv/object_detection'
+OBJECT_DETECTION = 'cv/object_detection'
 
 # Path
 WEIGHTS_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.weights'
 CONFIG_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.cfg'
 CLASS_FILE = f'{OBJECT_DETECTION}/yolo/obj.names'
+
+LOCAL_DB = 'common/local.db'
 
 # Configuration
 BATCH_SIZE = 1

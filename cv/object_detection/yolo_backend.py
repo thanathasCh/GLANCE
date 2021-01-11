@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 
-from common.shared import config
+from common import config
 
 
 class YOLOv4():
@@ -67,12 +67,22 @@ class YOLOv4():
             cv2.imshow('Detected Image', image)
             cv2.waitKey()
 
-    
+
     def detectImg(self, image):
         coords = self.getCoordinates(images)
         products = []
 
         for x1, y1, x2, y2 in coords:
             products.append(image[x1:x2, y1:y2])
+
+        return products
+
+
+    def detectImgCoord(self, image):
+        coords = self.getCoordinates(images)
+        products = []
+
+        for x1, y1, x2, y2 in coods:
+            products.append([image[x1:x2, y1:y2], [[x1, y1], [x2, y2]]])
 
         return products
