@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 
 # Base Url
-_glance_base_url = 'https://glance-api.azurewebsites.net/'
+_glance_base_url = 'https://glance-api.azurewebsites.net/api/v1/Operation/'
 
 
 upload_input = urljoin(_glance_base_url, 'UploadInput')

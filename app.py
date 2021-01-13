@@ -2,9 +2,9 @@ import os
 from common import config
 from common import secret
 from flask import Flask, request
-from utility import remote
+from cv import backend
+from utility import remotev import background
 from utility.local import storage
-from utility import background
 # import sentry_sdk
 # from sentry_sdk.integrations.flask import FlaskIntegration
 
@@ -12,40 +12,53 @@ app = Flask(config.WEB_NAME)
 
 @app.route('/')
 def index():
-    return 'Hello World'
+    return 'Done'
+
+@app.route('/load-products')
+def load_products():
+    # try:
+    imagePaths = remote.get_unprocessed_product()
+
+    for imagePath in imagePaths:
+        image = remote.get_image(imagePath['imageUrl'])
+        kp, desc = backend.process_feature(image)
+        storage.add_feature(imagePath['id'], 0, kp, desc)
+
+    #     return 'finished'
+    # except:
+    #     return 'failed'
+
+# @app.route('/add_images', methods=['POST'])
+# def add_images():
+#     try:
+#         ids = request.get_json()['ids']
+#         images = remote.get_images(ids)
+#         storage.add_feature(ids, images)
+#     except:
+#         return 'failed'
+#     return 'finished'
 
 
-@app.route('/add_images', methods=['POST'])
-def add_images():
-    try:
-        ids = request.get_json()[ids]
-        images = remote.get_images(ids)
-        storage.add_feature(ids, images)
-    except:
-        return 'failed'
-    return 'finished'
+# @app.route('/update_images', methods=['POST'])
+# def update_images():
+#     try:
+#         ids = request.get_json()[ids]
+#         images = remote.get_images(ids)
+#         storage.update_feature(ids, images)
+#     except:
+#         return 'failed'
+#     return 'finished'
 
 
-@app.route('/update_images', methods=['POST'])
-def update_images():
-    try:
-        ids = request.get_json()[ids]
-        images = remote.get_images(ids)
-        storage.update_feature(ids, images)
-    except:
-        return 'failed'
-    return 'finished'
-
-
-@app.route('/delete_images', methods=['POST'])
-def delete_images():
-    try:
-        ids = request.get_json()[ids]
-        images = remote.get_images(ids)
-        storage.delete_features(ids, images)
-    except:
-        return 'failed'
-    return 'finished'
+# @app.route('/delete_images', methods=['POST'])
+# def delete_images():
+#     try:
+#         ids = request.get_json()[ids]
+#         images = remote.get_images(ids)
+#         storage.delete_features(ids, images)
+#     except:
+#         return 'failed'
+#     return 'finished'
 
 
 # sentry_sdk.init(

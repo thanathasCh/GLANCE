@@ -42,3 +42,6 @@ INDEX_PARAMS = dict(
     multi_probe_level=1
 )
 SEARCH_PARAMS = dict(checks=64)
+
+# temp path
+TEMP_IMAGES = 'temp/shelves'
