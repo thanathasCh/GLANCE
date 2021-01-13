@@ -24,7 +24,14 @@ class LocalStorage:
                     id INTEGER,
                     location_id INTEGER,
                     body BLOB
-                )
+                );
+
+                CREATE TABLE UnknownImages
+                (
+                    id INTEGER,
+                    location_id INTEGER,
+                    body BLOB
+                );
                 ''')
 
 
@@ -136,6 +143,20 @@ class LocalStorage:
                 ''', [idsQuery])
 
             conn.commit()
+
+
+    def get_undetected_features_by_location_id(self, location_id):
+        with sqlite3.connect(config.LOCAL_DB) as conn:
+            cur = conn.cursor()
+            cur.execute(
+                '''
+                SELECT *
+                FROM UnknownImages
+                WHERE location_id = ?
+                ''', [location_id])
+
+            return [(x[0], x[1], backend.pickle_to_feature(x[2])) for x in cur.fetchall()]
+
 
 
 storage = LocalStorage()

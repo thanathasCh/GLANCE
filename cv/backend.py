@@ -32,7 +32,19 @@ def process_video(unpro_video):
 
         for product, coords in results:
             product_id = fm.search_product(product, product_database)
-            shelf_product.addProduct(product_id, f'{coords[0]} {coords[1]} {coords[2]} {coords[3]}')
+
+            if product_id != -1:
+                shelf_product.addProduct(product_id, f'{coords[0]} {coords[1]} {coords[2]} {coords[3]}')
+            # else:
+                # unknown_database = storage.get_undetected_features_by_location_id(0)
+                # unknown_id = fm.search_product(product, unknown_database)
+
+                # if unknown_id == -1:
+                #     # add to storage
+                #     pass
+                
+                # # add to the db
+                # # TODO  
 
         shelf_class.addShelfProduct(shelf_product)
     
