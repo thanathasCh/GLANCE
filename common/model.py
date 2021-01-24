@@ -15,6 +15,12 @@ class Product:
     productId: int
     coordinate: str
 
+    def to_dict(self):
+        return {
+            'productId': self.productId,
+            'coordinate': self.coordinate
+        }
+
 
 @dataclass
 class ShelfProduct:
@@ -26,6 +32,15 @@ class ShelfProduct:
     def addProduct(self, productId: int, coordinate: str):
         self.productlist.append(Product(productId, coordinate))
 
+    
+    def to_dict(self):
+        return {
+            'shelfImagePath': self.shelfImagePath,
+            'rowNumber': self.rowNumber,
+            'number': self.number,
+            'productlist': [x.to_dict() for x in self.productlist]
+        }
+
 
 @dataclass
 class ShelfModel:
@@ -35,11 +50,9 @@ class ShelfModel:
     def addShelfProduct(self, shelfProduct: ShelfProduct):
         self.shelfProductlist.append(shelfProduct)
 
-
-def class2dict(instance, built_dict={}):
-    if not hasattr(instance, "__dict__"):
-        return instance
-    new_subdic = vars(instance)
-    for key, value in new_subdic.items():
-        new_subdic[key] = class2dict(value)
-    return new_subdic
+    
+    def to_dict(self):
+        return {
+            'input': self.inputId,
+            'shelfProductlist': [x.to_dict() for x in self.shelfProductlist]
+        }

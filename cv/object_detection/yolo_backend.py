@@ -79,10 +79,10 @@ class YOLOv4():
 
 
     def detectImgCoord(self, image):
-        coords = self.getCoordinates(images)
+        coords = self.getCoordinates(image)
         products = []
 
-        for x1, y1, x2, y2 in coods:
+        for x1, y1, x2, y2 in coords:
             products.append([image[x1:x2, y1:y2], [[x1, y1], [x2, y2]]])
 
         return products

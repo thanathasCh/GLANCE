@@ -46,7 +46,7 @@ def compute_distance(k1, desc1, kp2, desc2):
         mtrx, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.)
 
         if mask.sum() > config.MIN_MATCH:
-            return float(mask.sum()) / mask.BATCH_SIZE
+            return float(mask.sum()) / mask.size
         else:
             return 0.
     else:
@@ -62,7 +62,7 @@ def search_product(img, database):
 
     for product_id, _, feature in database:
         kp2, desc2 = feature
-        accuracy = compute_distance(k1, desc1, kp2, desc2)
+        accuracy = compute_distance(kp1, desc1, kp2, desc2)
 
         if accuracy > mx_acc:
             mx_acc = accuracy

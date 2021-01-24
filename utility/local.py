@@ -158,5 +158,4 @@ class LocalStorage:
             return [(x[0], x[1], backend.pickle_to_feature(x[2])) for x in cur.fetchall()]
 
 
-
 storage = LocalStorage()

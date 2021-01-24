@@ -7,6 +7,7 @@ from utility import log
 from skimage import io as imageIO
 from common.model import VideoResponse
 
+
 def _validate_status(response):
     if response.status_code:
         return True
@@ -33,7 +34,6 @@ def get_video(url):
         if frame is None:
             break
 
-        cv2.imshow('frame', frame)
         video.append(frame)
     
     vcap.release()
@@ -61,3 +61,7 @@ def get_unprocessed_product():
         return None
 
     return response.json()
+
+ 
+def get_poc_shelf_images():
+    return [[x, get_image(x)] for x in api_path.poc_image_path]
