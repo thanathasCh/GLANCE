@@ -29,6 +29,7 @@ def load_products():
     except:
         return 'failed'
 
+
 @app.route('/highlight-image', methods=['POST'])
 def highlight_image():
     data = request.get_json()

@@ -24,15 +24,20 @@ class LocalStorage:
                     id INTEGER,
                     location_id INTEGER,
                     body BLOB
-                );
+                )
+                ''')
 
+            cur.execute(
+                '''
                 CREATE TABLE UnknownImages
                 (
                     id INTEGER,
                     location_id INTEGER,
                     body BLOB
-                );
+                )
                 ''')
+
+            conn.commit()
 
 
     def checkTableExist(self):

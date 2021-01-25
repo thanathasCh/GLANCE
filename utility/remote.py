@@ -47,7 +47,12 @@ def upload_shelf(data):
 
 
 def get_image(path):
-    return imageIO.imread(path)
+    img = imageIO.imread(path)
+
+    if path.split('.')[-1] == 'png':
+        img = img[:,:,:3]
+
+    return img
 
 
 def get_images(paths):

@@ -15,7 +15,6 @@ model = YOLOv4()
 
 
 def slice_video(video, speed=10):
-    # TODO Check blur and calculate slice_num  
     slice_num = speed
     return video[0::slice_num]
 
