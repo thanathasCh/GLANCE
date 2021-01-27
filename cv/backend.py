@@ -3,7 +3,7 @@ import imutils
 import io
 import numpy as np
 from common import config
-from utility import remote, os_path
+from utility import remote
 from utility.local import storage
 from cv.object_detection.yolo_backend import YOLOv4
 from cv import feature_matching as fm
@@ -25,35 +25,34 @@ def img_to_bytes(img):
     return io.BytesIO(cv2.imencode('.jpg', img)[1])
 
 
-def process_video(unpro_video):
-    product_database = storage.get_feature_by_location_id(0)
-    shelf_class = ShelfModel(unpro_video.inputId, [])
+# def process_video(unpro_video):
+#     product_database = storage.get_feature_by_location_id(0)
+#     shelf_class = ShelfModel(unpro_video.inputId, [])
 
-    video = remote.get_video(unpro_video.videoUrl)
-    shelves = slice_video(video, unpro_video.scanSpeed)
+#     video = remote.get_video(unpro_video.videoUrl)
+#     shelves = slice_video(video, unpro_video.scanSpeed)
 
-    for shelf in shelves:
-        results = model.detectImgCoord(shelf)
-        image_path = os_path.save_images(config.TEMP_IMAGES, shelf)
-        shelf_product = ShelfProduct(image_path, 0, 0, [])
+#     for shelf in shelves:
+#         results = model.detectImgCoord(shelf)
+#         shelf_product = ShelfProduct(image_path, 0, 0, [])
 
-        for product, coords in results:
-            product_id = fm.search_product(product, product_database)
+#         for product, coords in results:
+#             product_id = fm.search_product(product, product_database)
 
-            if product_id != -1:
-                shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
-            # else:
-            #     unknown_database = storage.get_undetected_features_by_location_id(0)
-            #     unknown_id = fm.search_product(product, unknown_database)
+#             if product_id != -1:
+#                 shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
+#             # else:
+#             #     unknown_database = storage.get_undetected_features_by_location_id(0)
+#             #     unknown_id = fm.search_product(product, unknown_database)
 
-            #     if unknown_id == -1:
-            #         storage.add_unknown_feature_by_location_id(0, product)
+#             #     if unknown_id == -1:
+#             #         storage.add_unknown_feature_by_location_id(0, product)
                 
-            #     # add to the db
-            #     # TODO  
+#             #     # add to the db
+#             #     # TODO  
 
-        shelf_class.addShelfProduct(shelf_product)
-    remote.upload_shelf(shelf_class.to_dict())
+#         shelf_class.addShelfProduct(shelf_product)
+#     remote.upload_shelf(shelf_class.to_dict())
 
 
 def process_image_poc(images):
