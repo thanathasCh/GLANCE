@@ -12,7 +12,7 @@ class YOLOv4():
         self.ln = [self.layerNames[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
     def getBlob(self, image):
-        return cv2.dnn.blobFromImage(image, 1/255., config.INPUT_SIZE, swapRB=True, crop=False)
+        return cv2.dnn.blobFromImage(image, 1/255., config.OBJ_INPUT_SIZE, swapRB=True, crop=False)
 
 
     def getLayerOutputs(self, image):
@@ -50,8 +50,8 @@ class YOLOv4():
 
         if len(idx) > 0:
             for i in idx.flatten():
-                x, y = boxes[i][0], boxes[i][1]
-                w, h = boxes[i][2], boxes[i][3]
+                x, y = max(boxes[i][0], 0), max(boxes[i][1], 0)
+                w, h = max(boxes[i][2], 0), max(boxes[i][3], 0)
                 coords.append([x, y, x+w, y+h])
 
         return coords

@@ -36,7 +36,7 @@ def compute_features(img):
     return kp, desc
 
 
-def compute_distance(k1, desc1, kp2, desc2):
+def compute_distance(kp1, desc1, kp2, desc2):
     matches = matcher.knnMatch(desc1, desc2, 2)
     good_matches = [m[0] for m in matches if len(m) == 2 and m[0].distance < m[1].distance * config.RATIO]
 

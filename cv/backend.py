@@ -1,4 +1,5 @@
 import cv2
+import imutils
 import io
 import numpy as np
 from common import config
@@ -9,6 +10,7 @@ from cv import feature_matching as fm
 import pickle
 from common.model import ShelfModel, ShelfProduct
 from common.color import generate_colors
+from tqdm import tqdm
 
 
 model = YOLOv4()
@@ -17,6 +19,10 @@ model = YOLOv4()
 def slice_video(video, speed=10):
     slice_num = speed
     return video[0::slice_num]
+
+
+def img_to_bytes(img):
+    return io.BytesIO(cv2.imencode('.jpg', img)[1])
 
 
 def process_video(unpro_video):
@@ -35,7 +41,7 @@ def process_video(unpro_video):
             product_id = fm.search_product(product, product_database)
 
             if product_id != -1:
-                shelf_product.addProduct(product_id, f'{coords[0]} {coords[1]} {coords[2]} {coords[3]}')
+                shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
             # else:
             #     unknown_database = storage.get_undetected_features_by_location_id(0)
             #     unknown_id = fm.search_product(product, unknown_database)
@@ -47,29 +53,30 @@ def process_video(unpro_video):
             #     # TODO  
 
         shelf_class.addShelfProduct(shelf_product)
-    
     remote.upload_shelf(shelf_class.to_dict())
 
 
-    def process_image_poc(images):
-        product_database = storage.get_feature_by_location_id(0)
-        shelf_class = ShelfModel(1, [])
+def process_image_poc(images):
+    product_database = storage.get_feature_by_location_id(0)
+    shelf_class = ShelfModel(1, [])
+    resized_shelves = []
 
-        for image_path, shelf in images:
-            results = model.detectImgCoord(shelf)
-            shelf_product = ShelfProduct(image_path, 0, 0, [])
+    for image_path, shelf in tqdm(images):
+        resized_shelf = imutils.resize(shelf, width=1980)
+        resized_shelves.append(img_to_bytes(resized_shelf))
+        results = model.detectImgCoord(resized_shelf)
+        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), [])
 
-            for product, coords in results:
-                product_id = fm.search_product(product, product_database)
+        for product, coords in results:
+            product_id = fm.search_product(product, product_database)
+            if product_id != -1:
+                shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
+            else:
+                # TODO
+                pass
 
-                if product_id != -1:
-                    shelf_product.addProduct(product_id, f'{coords[0]} {coords[1]} {coords[2]} {coords[3]}')
-                else:
-                    # TODO
-                    pass
-
-            shelf_class.addShelfProduct(shelf_product)
-        remote.upload_shelf(shelf_class.to_dict())
+        shelf_class.addShelfProduct(shelf_product)
+    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
 def process_feature(image):
@@ -119,9 +126,6 @@ def highlight_img(img, product_coords):
 
     return io.BytesIO(cv2.imencode('.jpg', darken_img)[1])
 
+
 # def bytes_to_img(binary):
 #     return cv2.imdecode(np.fromstring(binary, np.uint8), cv2.IMREAD_UNCHANGED)
-
-
-# def img_to_bytes(img):
-#     return cv2.imencode('.jpg', img)[1].tostring()

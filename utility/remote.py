@@ -9,7 +9,7 @@ from common.model import VideoResponse
 
 
 def _validate_status(response):
-    if response.status_code:
+    if response.status_code == 200:
         return True
     else:
         log.print_error(f'Error Code: {response.status_code}')
@@ -23,6 +23,7 @@ def check_process_queue():
 
     data = response.json()[0]
     return VideoResponse(data['inputId'], data['videoUrl'], data['scanSpeed'], data['scanDate'])
+
 
 def get_video(url):
     video = []
@@ -41,13 +42,18 @@ def get_video(url):
     return video
 
 
-def upload_shelf(data):
-    response = requests.post(api_path.insert_shelf_products, json=data)
+def upload_shelf(data, files):
+    image_files = [('shelfImages', (f'{i}.jpg' ,x, 'image/jpeg')) for i, x in enumerate(files)]
+    
+    response = requests.post(api_path.insert_shelf_products, data=data, files=image_files)
     _validate_status(response)
+
+    return response
 
 
 def get_image(path):
     img = imageIO.imread(path)
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
     if path.split('.')[-1] == 'png':
         img = img[:,:,:3]
@@ -70,3 +76,13 @@ def get_unprocessed_product():
  
 def get_poc_shelf_images():
     return [[x, get_image(x)] for x in api_path.poc_image_path]
+
+
+def update_product_status(ids, status='PROCESSED'):
+    data = {
+        'status': status,
+        'productIds': ids
+    }
+
+    response = requests.post(api_path.update_product_status, json=data)
+    _validate_status(response)

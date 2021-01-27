@@ -13,6 +13,7 @@ insert_shelf = urljoin(_glance_base_url, 'InsertShelf')
 insert_shelf_products = urljoin(_glance_base_url, 'InsertShelfProducts')
 upload_undetected_product = urljoin(_glance_base_url, 'UploadUndetectedProduct')
 list_undetected_product_features = urljoin(_glance_base_url, 'ListUndetectedProductFeatures')
+update_product_status = urljoin(_glance_base_url, 'UpdateProductsFeatureStatus')
 
 _images_path = [
     'R1S1.1',

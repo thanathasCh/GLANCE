@@ -18,13 +18,17 @@ def _check_tasks():
 
 def _check_tasks_poc():
     if not config.IS_PROCESS_RUNNING:
+        print('running')
         config.IS_PROCESS_RUNNING = True
+        print('getting images')
         images = remote.get_poc_shelf_images()
+        print('fetched images')
 
         if images:
+            print('processing')
             backend.process_image_poc(images)
             config.IS_PROCESS_RUNNING = False
-            _check_tasks_poc()
+            # _check_tasks_poc()
          
 
 def start():

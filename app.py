@@ -13,18 +13,22 @@ app = Flask(config.WEB_NAME)
 
 @app.route('/')
 def index():
+    background._check_tasks_poc()
     return 'Done'
 
 @app.route('/load-products')
 def load_products():
     try:
         imagePaths = remote.get_unprocessed_product()
+        productIds = []
 
         for imagePath in imagePaths:
+            productIds.append(imagePath['id'])
             image = remote.get_image(imagePath['imageUrl'])
             kp, desc = backend.process_feature(image)
             storage.add_feature(imagePath['id'], 0, kp, desc)
 
+        remote.update_product_status(productIds)
         return 'finished'
     except:
         return 'failed'
@@ -81,4 +85,4 @@ def highlight_image():
 # )
 
 # background.start()
-app.run(debug=True)
+app.run(debug=False)

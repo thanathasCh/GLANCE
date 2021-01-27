@@ -24,7 +24,6 @@ class Product:
 
 @dataclass
 class ShelfProduct:
-    shelfImagePath: str
     rowNumber: 0
     number: 0
     productlist: List[Product]
@@ -33,11 +32,11 @@ class ShelfProduct:
         self.productlist.append(Product(productId, coordinate))
 
     
-    def to_dict(self):
+    def to_dict(self, index):
         return {
-            'shelfImagePath': self.shelfImagePath,
             'rowNumber': self.rowNumber,
             'number': self.number,
+            'index': index,
             'productlist': [x.to_dict() for x in self.productlist]
         }
 
@@ -53,6 +52,6 @@ class ShelfModel:
     
     def to_dict(self):
         return {
-            'input': self.inputId,
-            'shelfProductlist': [x.to_dict() for x in self.shelfProductlist]
+            'inputId': self.inputId,
+            'shelfProductlist': str([x.to_dict(i) for i, x in enumerate(self.shelfProductlist)])
         }
