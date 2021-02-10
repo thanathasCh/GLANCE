@@ -56,7 +56,7 @@ def img_to_bytes(img):
 
 
 def process_image_poc(images):
-    product_database = storage.get_feature_by_location_id(0)
+    # product_database = storage.get_feature_by_location_id(0)
     shelf_class = ShelfModel(1, [])
     resized_shelves = []
 
@@ -65,6 +65,7 @@ def process_image_poc(images):
         resized_shelves.append(img_to_bytes(resized_shelf))
         results = model.detectImgCoord(resized_shelf)
         shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), [])
+        product_database = fm.get_features_by_path(image_path[-10:-4])
 
         for product, coords in results:
             product_id = fm.search_product(product, product_database)
@@ -93,38 +94,6 @@ def pickle_to_feature(binary):
     desc = data[1]
     
     return kp, desc
-
-
-def adjust_gamma(image, gamma=1.0):
-	invGamma = 1.0 / gamma
-	table = np.array([((i / 255.0) ** invGamma) * 255
-		for i in np.arange(0, 256)]).astype("uint8")
-
-	return cv2.LUT(image, table)
-
-
-def highlight_img(img, product_coords):
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    darken_img = adjust_gamma(img, .25)
-    h, w, _ = img.shape
-    colors = generate_colors(len(product_coords))
-
-    for product_coord, color in zip(product_coords, colors):
-        coords = [[int(y) for y in x.split()] for x in product_coord]
-
-        mask = np.zeros((h, w), dtype=np.uint8)
-        for x1, y1, x2, y2 in coords:
-            mask[x1:x2, y1:y2] = 255
-            darken_img[x1:x2, y1:y2] = img[x1:x2, y1:y2]
-
-        _, binary = cv2.threshold(mask, 40, 255, cv2.THRESH_BINARY)
-        contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
-        for con in contours:
-            cv2.drawContours(darken_img, con, -1, color, 2)
-
-    return io.BytesIO(cv2.imencode('.jpg', darken_img)[1])
-
 
 # def bytes_to_img(binary):
 #     return cv2.imdecode(np.fromstring(binary, np.uint8), cv2.IMREAD_UNCHANGED)

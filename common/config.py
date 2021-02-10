@@ -1,4 +1,5 @@
 # Status
+IS_TEST = True
 IS_PROCESS_RUNNING = False
 
 # String
@@ -6,6 +7,7 @@ WEB_NAME = 'Glance'
 
 # Base Directory
 OBJECT_DETECTION = 'cv/object_detection'
+FEATURE_PATH = 'test_db'
 
 # Path
 WEIGHTS_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.weights'
@@ -24,6 +26,7 @@ CONFIDENCE = .3
 OBJ_INPUT_SIZE = (640, 640)
 FX_INPUT_SIZE = (500, 500)
 FX_IMAGE_SIZE = (500, 500, 3)
+FX_IMAGE_SIZE_EMB = (-1, 500, 500, 3)
 
 # Colors
 BLUE = (255, 0, 0)
@@ -42,6 +45,6 @@ INDEX_PARAMS = dict(
     multi_probe_level=1
 )
 SEARCH_PARAMS = dict(checks=64)
-
-# temp path
-TEMP_IMAGES = 'temp/shelves'
+EMB_SIZE = 128
+DIS_ALG = 'euclidean'
+K_NUM = 15

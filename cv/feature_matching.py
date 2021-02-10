@@ -1,7 +1,10 @@
+import os
 import cv2
 import imutils
 import numpy as np
 from common import config
+
+
 detector = cv2.ORB_create(config.ORB_NUM)
 matcher = cv2.FlannBasedMatcher(config.INDEX_PARAMS, config.SEARCH_PARAMS)
 
@@ -30,6 +33,7 @@ def resize_white(img):
     new_img[y_off:y_off+org_h, x_off:x_off+org_w] = resized_img
     return new_img
 
+
 def compute_features(img):
     img = resize_white(img)
     kp, desc = detector.detectAndCompute(img, None)
@@ -53,7 +57,6 @@ def compute_distance(kp1, desc1, kp2, desc2):
         return 0.
         
 
-
 def search_product(img, database):
     best_match = -1
     mx_acc = 0
@@ -68,4 +71,8 @@ def search_product(img, database):
             mx_acc = accuracy
             best_match = product_id
 
-    return product_id
+    return best_match
+
+
+def get_features_by_path(path):
+    return [[int(x.split('.')[0]) , 0, compute_features(cv2.imread(f'{config.FEATURE_PATH}/{path}/{x}'))] for x in os.listdir(f'{config.FEATURE_PATH}/{path}')]

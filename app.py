@@ -4,6 +4,7 @@ from common import config
 from common import secret
 from flask import Flask, request, send_file
 from cv import backend
+from cv import image_processing as ip
 from utility import background, remote
 from utility.local import storage
 # import sentry_sdk
@@ -37,9 +38,11 @@ def load_products():
 @app.route('/highlight-image', methods=['POST'])
 def highlight_image():
     data = request.get_json()
+    
     img = remote.get_image(data['imageUrl'])
+    isGrouped = data['isGrouped']
     product_coords = data['productCoords']
-    highlighted_img = backend.highlight_img(img, product_coords)
+    highlighted_img = ip.highlight_img(img, product_coords, isGrouped)
 
     return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
 
