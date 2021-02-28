@@ -3,12 +3,13 @@ import io
 from common import config
 from common import secret
 from flask import Flask, request, send_file
+from flask_cors import CORS
 from cv import backend
 from cv import image_processing as ip
 from utility import background, remote
 from utility.local import storage
 # import sentry_sdk
-# from sentry_sdk.integrations.flask import FlaskIntegration
+# from sentry_sdk.integrations.flask import FlaskIntegratio
 
 app = Flask(config.WEB_NAME)
 
@@ -43,6 +44,17 @@ def highlight_image():
     isGrouped = data['isGrouped']
     product_coords = data['productCoords']
     highlighted_img = ip.highlight_img(img, product_coords, isGrouped)
+
+    return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
+
+
+@app.route('/highlight-empty-space', methods=['POST'])
+def highlight_empty_space():
+    data = request.get_json()
+
+    img = remote.get_image(data['imageUrl'])
+    product_coords = data['productCoords']
+    highlighted_img = ip.highlight_empty_space(img, product_coords)
 
     return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
 
@@ -89,3 +101,4 @@ def highlight_image():
 
 # background.start()
 app.run(debug=False)
+CORS(app, support_credential=True)
