@@ -61,7 +61,7 @@ class YOLOv4():
         coords = self.getCoordinates(image)
         
         for x1, y1, x2, y2 in coords:
-            cv2.rectangle(image, (x1, y1), (x2, y2), config.COLOR, 2)
+            cv2.rectangle(image, (x1, y1), (x2, y2), config.BLUE, 2)
 
         if isShow:
             cv2.imshow('Detected Image', image)

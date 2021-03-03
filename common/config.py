@@ -10,7 +10,8 @@ OBJECT_DETECTION = 'cv/object_detection'
 FEATURE_PATH = 'test_db'
 
 # Path
-WEIGHTS_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.weights'
+# WEIGHTS_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.weights'
+WEIGHTS_FILE = f'{OBJECT_DETECTION}/yolo/v22.weights'
 CONFIG_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.cfg'
 CLASS_FILE = f'{OBJECT_DETECTION}/yolo/obj.names'
 
