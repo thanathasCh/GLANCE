@@ -13,7 +13,7 @@ from utility.local import storage
 
 app = Flask(config.WEB_NAME)
 
-@app.route('/')
+@app.route('/test-poc')
 def index():
     background._check_tasks_poc()
     return 'Done'

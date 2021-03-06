@@ -79,10 +79,18 @@ class YOLOv4():
 
 
     def detectImgCoord(self, image):
-        coords = self.getCoordinates(image)
+        resized_img = cv2.resize(image, config.OBJ_INPUT_SIZE)
+        coords = self.getCoordinates(resized_img)
+        net_h, net_w = config.OBJ_INPUT_SIZE
+        org_h, org_w, _ = image.shape
+        ratio_h, ratio_w = org_h / net_h, org_w / net_w
+
+
         products = []
 
-        for x1, y1, x2, y2 in coords:
-            products.append([image[x1:x2, y1:y2], [[x1, y1], [x2, y2]]])
+        for org_x1, org_y1, org_x2, org_y2 in coords:
+            x1, y1 = int(org_x1*ratio_w), int(org_y1*ratio_h)
+            x2, y2 = int(org_x2*ratio_w), int(org_y2*ratio_h)
 
+            products.append([image[y1:y2, x1:x2], [[x1, y1], [x2, y2]]])
         return products
