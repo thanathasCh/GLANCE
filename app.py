@@ -52,24 +52,6 @@ def load_products():
     remote.update_product_status(productIds)
 
     return 'finished'
-    # try:
-    #     imagePaths = remote.get_unprocessed_product()
-    #     productIds = []
-    #     productImages = []
-
-    #     for imagePath in imagePaths:
-    #         product_id = imagePath['id']
-    #         image = remote.get_image(imagePath['imageUrl'])
-
-    #         productIds.append(product_id)
-    #         productImages.append(image)
-    #         backend.add_fm_db(product_id, 0, image)
-
-    #     backend.create_annoty_db(productImages, 0)
-    #     remote.update_product_status(productIds)
-    #     return 'finished'
-    # except:
-    #     return 'failed'
 
 
 @app.route('/highlight-image', methods=['POST'])
