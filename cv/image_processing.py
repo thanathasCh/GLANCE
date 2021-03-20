@@ -118,7 +118,3 @@ def highlight_img(img, product_coords, isGrouped):
         return _groupHighlightImage(img, product_coords, colors)
     else:
         return _highlightImage(img, product_coords, colors)
-
-
-def highlight_empty_space(img, product_coords):
-    return None

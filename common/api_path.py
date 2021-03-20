@@ -4,7 +4,6 @@ from urllib.parse import urljoin
 _glance_base_url = 'https://glance-api.azurewebsites.net/api/v1/Operation/'
 _glance_poc_bucket = 'https://glancevault.blob.core.windows.net/glanceblobs/POCimages/'
 
-
 upload_input = urljoin(_glance_base_url, 'input/UploadInput')
 list_unprocessed_videos = urljoin(_glance_base_url, 'product/ListUnprocessedInput')
 list_unprocessed_products = urljoin(_glance_base_url, 'product/ListUnprocessedProducts')

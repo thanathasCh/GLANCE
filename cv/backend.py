@@ -65,7 +65,7 @@ def process_image_poc(images):
         resized_shelf = imutils.resize(shelf, width=1980)
         resized_shelves.append(img_to_bytes(resized_shelf))
         results = model.detectImgCoord(resized_shelf)
-        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), [])
+        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), int(image_path[-5]), [])
         product_database = fm.get_features_by_path(image_path[-10:-4])
 
         for product, coords in results:
@@ -73,12 +73,11 @@ def process_image_poc(images):
             if product_id != -1:
                 shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
             else:
-                # TODO
                 pass
 
         shelf_class.addShelfProduct(shelf_product)
+    print(shelf_class.to_dict())
     # print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
-    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
 def process_image_emb_poc(images):
@@ -90,7 +89,7 @@ def process_image_emb_poc(images):
         resized_shelf = imutils.resize(shelf, width=1980)
         resized_shelves.append(img_to_bytes(resized_shelf))
         results = model.detectImgCoord(resized_shelf)
-        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), [])
+        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), int(image_path[-5]), [])
         
         for product, coords in results:
             product_id = fm.search_product_emb(product, location_id)
@@ -101,8 +100,8 @@ def process_image_emb_poc(images):
 
         shelf_class.addShelfProduct(shelf_product)
 
-    # print(shelf_class.to_dict())
-    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
+    print(shelf_class.to_dict())
+    # print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
 def process_feature(image):
@@ -130,6 +129,14 @@ def pickle_to_feature(binary):
     desc = data[1]
     
     return kp, desc
+
+
+def get_colors(count):
+    return generate_colors(count)
+
+
+def convert_color_to_hex(color):
+    return '#%02x%02x%02x' % (color[2], color[1], color[0])
 
 # def bytes_to_img(binary):
 #     return cv2.imdecode(np.fromstring(binary, np.uint8), cv2.IMREAD_UNCHANGED)

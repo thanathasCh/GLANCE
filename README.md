@@ -81,3 +81,78 @@ After run the program, it should be hosted on local port ```http://127.0.0.1:500
     ]
 }
 ```
+
+# How to get colors for each products
+
+There are 2 functions provided.
+
+1. ```[BASE URL]/get-colors/[int]```: where int is number of your products
+
+```
+Retrn json
+[
+    "#9800ff",
+    "#ff6600",
+    "#66ff00",
+    "#ff00cc",
+    "#00ff33",
+    "#ff0032",
+    "#0099ff",
+    "#00ffcb",
+    "#ffff00",
+    "#0000ff"
+]
+```
+2. ```[BASE URL]/get-colors-product```
+
+json body 
+```
+[1, 2, 3, 4, 5, 6] <- list of product ids
+```
+
+
+```
+Return json
+[
+    {
+        "color": "#9800ff",
+        "productId": 1
+    },
+    {
+        "color": "#ff6600",
+        "productId": 2
+    },
+    {
+        "color": "#66ff00",
+        "productId": 3
+    },
+    {
+        "color": "#ff00cc",
+        "productId": 4
+    },
+    {
+        "color": "#00ff33",
+        "productId": 5
+    },
+    {
+        "color": "#ff0032",
+        "productId": 6
+    },
+    {
+        "color": "#0099ff",
+        "productId": 7
+    },
+    {
+        "color": "#00ffcb",
+        "productId": 8
+    },
+    {
+        "color": "#ffff00",
+        "productId": 9
+    },
+    {
+        "color": "#0000ff",
+        "productId": 10
+    }
+]
+```

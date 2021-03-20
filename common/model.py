@@ -26,17 +26,18 @@ class Product:
 class ShelfProduct:
     rowNumber: 0
     number: 0
+    index: 0
     productlist: List[Product]
 
-    def addProduct(self, productId: int, coordinate: str):
+    def addProduct(self, productId: int, index: int, coordinate: str):
         self.productlist.append(Product(productId, coordinate))
 
     
-    def to_dict(self, index):
+    def to_dict(self):
         return {
             'rowNumber': self.rowNumber,
             'number': self.number,
-            'index': index+1,
+            'index': self.index,
             'productlist': [x.to_dict() for x in self.productlist]
         }
 
@@ -53,5 +54,5 @@ class ShelfModel:
     def to_dict(self):
         return {
             'inputId': self.inputId,
-            'shelfProductlist': str([x.to_dict(i) for i, x in enumerate(self.shelfProductlist)])
+            'shelfProductlist': str([x.to_dict() for x in self.shelfProductlist])
         }

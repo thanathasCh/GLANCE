@@ -2,7 +2,7 @@ import os
 import io
 from common import config
 from common import secret
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 from cv import backend
 from cv import image_processing as ip
@@ -66,15 +66,19 @@ def highlight_image():
     return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
 
 
-@app.route('/highlight-empty-space', methods=['POST'])
-def highlight_empty_space():
-    data = request.get_json()
+@app.route('/get-colors/<int:count>')
+def get_colors(count):
+    colors = [backend.convert_color_to_hex(x) for x in backend.get_colors(count)]
+    return jsonify(colors)
 
-    img = remote.get_image(data['imageUrl'])
-    product_coords = data['productCoords']
-    highlighted_img = ip.highlight_empty_space(img, product_coords)
 
-    return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
+@app.route('/get-colors-product', methods=['POST'])
+def get_colors_product():
+    product_ids = request.get_json()
+    colors = [backend.convert_color_to_hex(x) for x in backend.get_colors(len(product_ids))]
+    color_product_ids = [{'productId': id, 'color': color} for id, color in zip(product_ids, colors)]
+    return jsonify(color_product_ids)
+
 # @app.route('/add_images', methods=['POST'])
 # def add_images():
 #     try:
