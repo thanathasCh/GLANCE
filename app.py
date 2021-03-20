@@ -13,27 +13,63 @@ from utility.local import storage
 
 app = Flask(config.WEB_NAME)
 
+
+@app.route('/')
+def test():
+    return 'Test'
+
+@app.route('/test-model')
+def embed_model():
+    background._check_tasks_embed_model()
+    return 'Done'
+
 @app.route('/test-poc')
 def index():
     background._check_tasks_poc()
     return 'Done'
 
+
 @app.route('/load-products')
 def load_products():
-    try:
-        imagePaths = remote.get_unprocessed_product()
-        productIds = []
+    # imagePaths = remote.get_unprocessed_product()
+    imagePaths = remote.get_products_by_shelf(1)
+    productIds = []
+    productImages = []
 
-        for imagePath in imagePaths:
-            productIds.append(imagePath['id'])
+    for imagePath in imagePaths:
+        product_id = imagePath['id']
+
+        try:
             image = remote.get_image(imagePath['imageUrl'])
-            kp, desc = backend.process_feature(image)
-            storage.add_feature(imagePath['id'], 0, kp, desc)
+        except:
+            continue
 
-        remote.update_product_status(productIds)
-        return 'finished'
-    except:
-        return 'failed'
+        productIds.append(product_id)
+        productImages.append(image)
+        backend.add_fm_db(product_id, 0, image)
+
+    backend.create_annoty_db(productIds, productImages, 0)
+    remote.update_product_status(productIds)
+
+    return 'finished'
+    # try:
+    #     imagePaths = remote.get_unprocessed_product()
+    #     productIds = []
+    #     productImages = []
+
+    #     for imagePath in imagePaths:
+    #         product_id = imagePath['id']
+    #         image = remote.get_image(imagePath['imageUrl'])
+
+    #         productIds.append(product_id)
+    #         productImages.append(image)
+    #         backend.add_fm_db(product_id, 0, image)
+
+    #     backend.create_annoty_db(productImages, 0)
+    #     remote.update_product_status(productIds)
+    #     return 'finished'
+    # except:
+    #     return 'failed'
 
 
 @app.route('/highlight-image', methods=['POST'])
@@ -57,8 +93,6 @@ def highlight_empty_space():
     highlighted_img = ip.highlight_empty_space(img, product_coords)
 
     return send_file(highlighted_img, mimetype='image/jpeg', as_attachment=True, attachment_filename='image.jpg')
-
-
 # @app.route('/add_images', methods=['POST'])
 # def add_images():
 #     try:

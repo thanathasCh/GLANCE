@@ -11,6 +11,8 @@ import pickle
 from common.model import ShelfModel, ShelfProduct
 from common.color import generate_colors
 from tqdm import tqdm
+from cv import annoy_model
+from cv.embbed_model import model as emb_model
 
 
 model = YOLOv4()
@@ -56,7 +58,6 @@ def img_to_bytes(img):
 
 
 def process_image_poc(images):
-    # product_database = storage.get_feature_by_location_id(0)
     shelf_class = ShelfModel(1, [])
     resized_shelves = []
 
@@ -76,11 +77,46 @@ def process_image_poc(images):
                 pass
 
         shelf_class.addShelfProduct(shelf_product)
+    # print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
+    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
+
+
+def process_image_emb_poc(images):
+    shelf_class = ShelfModel(1, [])
+    resized_shelves = []
+    location_id = 0
+
+    for image_path, shelf in tqdm(images):
+        resized_shelf = imutils.resize(shelf, width=1980)
+        resized_shelves.append(img_to_bytes(resized_shelf))
+        results = model.detectImgCoord(resized_shelf)
+        shelf_product = ShelfProduct(int(image_path[-9]), int(image_path[-7]), [])
+        
+        for product, coords in results:
+            product_id = fm.search_product_emb(product, location_id)
+            if product_id != -1:
+                shelf_product.addProduct(product_id, f'{coords[0][0]} {coords[0][1]} {coords[1][0]} {coords[1][1]}')
+            else:
+                pass
+
+        shelf_class.addShelfProduct(shelf_product)
+
+    # print(shelf_class.to_dict())
     print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
 def process_feature(image):
     return fm.compute_features(image)
+
+
+def add_fm_db(product_id, location_id, image):
+    kp, desc = process_feature(image)
+    storage.add_feature(product_id, location_id, kp, desc)
+
+
+def create_annoty_db(ids, images, locationId):
+    features = emb_model.predict_multiple(images)
+    annoy_model.create_model(ids, features, locationId)
 
 
 def feature_to_pickle(kp, desc):

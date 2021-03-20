@@ -1,7 +1,3 @@
-# Status
-IS_TEST = True
-IS_PROCESS_RUNNING = False
-
 # String
 WEB_NAME = 'Glance'
 
@@ -16,6 +12,10 @@ CONFIG_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.cfg'
 CLASS_FILE = f'{OBJECT_DETECTION}/yolo/obj.names'
 
 LOCAL_DB = 'common/local.db'
+ANNOY_DB = 'cv/annoy_models/'
+
+def ANNOY_DB_PATH(id):
+    return ANNOY_DB + str(id) + '.model'
 
 # Configuration
 BATCH_SIZE = 1
@@ -27,7 +27,11 @@ CONFIDENCE = .3
 OBJ_INPUT_SIZE = (640, 640)
 FX_INPUT_SIZE = (500, 500)
 FX_IMAGE_SIZE = (500, 500, 3)
-FX_IMAGE_SIZE_EMB = (-1, 500, 500, 3)
+EMB_IMAGE_SHAPE = (200, 200)
+EMB_CHECKPOINT_PATH = 'cv/object_detection/emb_model.h5'
+EMB_INPUT_SHAPE = (EMB_IMAGE_SHAPE[0], EMB_IMAGE_SHAPE[1], 3)
+EMB_IMAGE_SIZE = (-1, EMB_IMAGE_SHAPE[0], EMB_IMAGE_SHAPE[1], 3)
+
 
 # Colors
 BLUE = (255, 0, 0)
@@ -46,6 +50,7 @@ INDEX_PARAMS = dict(
     multi_probe_level=1
 )
 SEARCH_PARAMS = dict(checks=64)
-EMB_SIZE = 128
+EMB_SIZE = 64
 DIS_ALG = 'euclidean'
-K_NUM = 15
+K_NUM = 30
+BUILD_NUM = 50

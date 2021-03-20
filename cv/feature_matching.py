@@ -3,26 +3,27 @@ import cv2
 import imutils
 import numpy as np
 from common import config
-
+from cv.embbed_model import model as emb_model
+from cv import annoy_model as am
+from utility.local import storage
 
 detector = cv2.ORB_create(config.ORB_NUM)
 matcher = cv2.FlannBasedMatcher(config.INDEX_PARAMS, config.SEARCH_PARAMS)
 
-
-def get_white_image(shape=config.FX_IMAGE_SIZE, value=config.WHITE):
+def get_white_image(shape, value=config.WHITE):
     return np.full(shape, value, np.uint8)
 
 
-def resize_white(img):
+def resize_white(img, shape=config.FX_IMAGE_SIZE):
     h, w, _ = img.shape
     resized_img = None
 
     if w > h:
-        resized_img = imutils.resize(img, width=config.FX_INPUT_SIZE[0])
+        resized_img = imutils.resize(img, width=shape[0])
     else:
-        resized_img = imutils.resize(img, height=config.FX_INPUT_SIZE[0])
+        resized_img = imutils.resize(img, height=shape[0])
 
-    new_img = get_white_image()
+    new_img = get_white_image(shape)
 
     org_h, org_w, _ = resized_img.shape
     new_h, new_w, _ = new_img.shape
@@ -38,6 +39,14 @@ def compute_features(img):
     img = resize_white(img)
     kp, desc = detector.detectAndCompute(img, None)
     return kp, desc
+
+def compute_emb_features(images):
+    images = [resize_white(x) for x in images]
+    return emb_model.predict_multiple(images)
+
+def compute_emb_featue(img):
+    img = resize_white(img, shape=config.EMB_INPUT_SHAPE)
+    return emb_model.predict(img)
 
 
 def compute_distance(kp1, desc1, kp2, desc2):
@@ -55,7 +64,7 @@ def compute_distance(kp1, desc1, kp2, desc2):
             return 0.
     else:
         return 0.
-        
+
 
 def search_product(img, database):
     best_match = -1
@@ -72,6 +81,14 @@ def search_product(img, database):
             best_match = product_id
 
     return best_match
+
+
+def search_product_emb(img, locationId):
+    productIds = am.find_annoy(emb_model.predict(img), locationId)
+    product_db = storage.get_feature_by_product_ids(productIds)
+    result_id = search_product(img, product_db)
+
+    return result_id
 
 
 def get_features_by_path(path):

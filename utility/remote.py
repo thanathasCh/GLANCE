@@ -74,8 +74,29 @@ def get_unprocessed_product():
     return response.json()
 
  
+def list_all_products():
+    response = requests.get(api_path.list_all_products)
+    _validate_status(response)
+
+    data = []
+
+    for i in response.json():
+        id = i['id']
+        url = i['imageUrl']
+        try:
+            data.append([id, get_image(url)])
+        except:
+            continue
+
+    return data
+
+
 def get_poc_shelf_images():
     return [[x, get_image(x)] for x in api_path.poc_image_path]
+
+
+def get_full_poc_shelf_images():
+    return [[x, get_image(x)] for x in api_path.full_poc_image_path]
 
 
 def update_product_status(ids, status='PROCESSED'):
@@ -86,3 +107,10 @@ def update_product_status(ids, status='PROCESSED'):
 
     response = requests.post(api_path.update_product_status, json=data)
     _validate_status(response)
+
+
+def get_products_by_shelf(rowNumber):
+    response = requests.get(api_path.get_products_by_shelf + str(rowNumber))
+    _validate_status(response)
+
+    return response.json()

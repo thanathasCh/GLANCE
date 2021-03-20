@@ -36,7 +36,7 @@ class ShelfProduct:
         return {
             'rowNumber': self.rowNumber,
             'number': self.number,
-            'index': index,
+            'index': index+1,
             'productlist': [x.to_dict() for x in self.productlist]
         }
 

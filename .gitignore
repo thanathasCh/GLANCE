@@ -1,4 +1,10 @@
 cv/object_detection/yolo
+cv/object_detection/emb_model.h5
+common/local.db
 common/secure.py
 .vscode
 test_db
+cv/annoy_models
+common/__pycache__
+cv/__pycache__
+utility/__pycache__
