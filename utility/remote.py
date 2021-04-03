@@ -62,7 +62,7 @@ def get_image(path):
 
 
 def get_images(paths):
-    return [imageIO.imread(path) for path in paths]
+    return [get_image(path) for path in paths]
 
 
 def get_unprocessed_product():

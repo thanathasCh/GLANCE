@@ -12,11 +12,22 @@ from utility.local import storage
 # from sentry_sdk.integrations.flask import FlaskIntegratio
 
 app = Flask(config.WEB_NAME)
-
+CORS(app, support_credential=True)
+    
 
 @app.route('/')
 def test():
     return 'Test'
+
+
+@app.route('/demo')
+def demo():
+    data = request.get_json()
+    inputId = data['inputId']
+    imageUrls = data['imageUrls']
+    background.run_demo(inputId, imageUrls)
+
+    return 'Done'
 
 @app.route('/test-model')
 def embed_model():
@@ -44,9 +55,15 @@ def load_products():
         except:
             continue
 
-        productIds.append(product_id)
-        productImages.append(image)
-        backend.add_fm_db(product_id, 0, image)
+        # productIds.append(product_id)
+        # productImages.append(image)
+        # backend.add_fm_db(product_id, 0, image)
+
+        for rImg in ip.rotateImg(image):
+            productIds.append(product_id)
+            productImages.append(rImg)
+            backend.add_fm_db(product_id, 0, rImg)
+
 
     backend.create_annoty_db(productIds, productImages, 0)
     remote.update_product_status(productIds)
@@ -120,5 +137,4 @@ def get_colors_product():
 # )
 
 # background.start()
-app.run(debug=False)
-CORS(app, support_credential=True)
+app.run(debug=False, port=4000)

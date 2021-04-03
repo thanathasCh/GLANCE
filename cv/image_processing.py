@@ -1,5 +1,6 @@
 import io
 import cv2
+import random
 import numpy as np
 from common.color import generate_colors
 
@@ -118,3 +119,16 @@ def highlight_img(img, product_coords, isGrouped):
         return _groupHighlightImage(img, product_coords, colors)
     else:
         return _highlightImage(img, product_coords, colors)
+
+
+
+
+def rotateImg(img):
+    images = []
+    for angle in random.sample(range(-20, 20), 5):
+        h, w = img.shape[:2]
+        M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1)
+        img = cv2.warpAffine(img, M, (w, h))
+        images.append(img)
+
+    return images

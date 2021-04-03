@@ -76,12 +76,12 @@ def process_image_poc(images):
                 pass
 
         shelf_class.addShelfProduct(shelf_product)
-    print(shelf_class.to_dict())
-    # print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
+    # print(shelf_class.to_dict())
+    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
-def process_image_emb_poc(images):
-    shelf_class = ShelfModel(1, [])
+def process_image_emb_poc(inputId, images):
+    shelf_class = ShelfModel(inputId, [])
     resized_shelves = []
     location_id = 0
 
@@ -100,8 +100,8 @@ def process_image_emb_poc(images):
 
         shelf_class.addShelfProduct(shelf_product)
 
-    print(shelf_class.to_dict())
-    # print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
+    # print(shelf_class.to_dict())
+    print(remote.upload_shelf(shelf_class.to_dict(), resized_shelves).content)
 
 
 def process_feature(image):

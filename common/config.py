@@ -12,7 +12,7 @@ CONFIG_FILE = f'{OBJECT_DETECTION}/yolo/yolov4.cfg'
 CLASS_FILE = f'{OBJECT_DETECTION}/yolo/obj.names'
 
 LOCAL_DB = 'common/local.db'
-ANNOY_DB = 'cv/annoy_models/'
+ANNOY_DB = 'cv/annoy_models2/'
 
 def ANNOY_DB_PATH(id):
     return ANNOY_DB + str(id) + '.model'

@@ -29,7 +29,7 @@ class ShelfProduct:
     index: 0
     productlist: List[Product]
 
-    def addProduct(self, productId: int, index: int, coordinate: str):
+    def addProduct(self, productId: int, coordinate: str):
         self.productlist.append(Product(productId, coordinate))
 
     

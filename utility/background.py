@@ -41,9 +41,18 @@ def _check_tasks_embed_model():
 
         if images:
             print('processing')
-            backend.process_image_emb_poc(images)
+            backend.process_image_emb_poc(6, images)
             states.IS_PROCESS_RUNNING = False
             # _check_tasks_embed_model()
+
+def run_demo(inputId, imageUrls):
+    print('running')
+    images = remote.get_images(imageUrls)
+    print('fetched images')
+
+    if images:
+        print('processing')
+        backend.process_image_emb_poc(inputId, images)
 
 def start():
     # scheduler = BackgroundScheduler()

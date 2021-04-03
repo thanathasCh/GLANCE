@@ -50,7 +50,7 @@ class EmbbedModel:
     
     def _load_model(self):
         emb_model, model = self._get_siamese_network()
-        model.load_weights(config.EMB_CHECKPOINT_PATH)
+        # model.load_weights(config.EMB_CHECKPOINT_PATH)
 
         return emb_model
 
